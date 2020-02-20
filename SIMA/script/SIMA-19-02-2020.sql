@@ -7,7 +7,7 @@ create table TB_Carrera(
 Carr_id_PK	number(3) not null,
 Carr_codi	varchar2(5) not null,
 Carr_nomb	varchar2(8) null,
-Carr_titu	varchar2(20) null,
+Carr_titu	varchar2(20) null
 );
 
 create table TB_Ciclo(
