@@ -5,11 +5,12 @@ import Logic.Profesor;
 import Model.Model_Profesor;
 import java.util.List;
 
-public class Controller_Profesor {
+public class Controller_Profesor extends Controller<Profesor>{
 
     private final Model_Profesor model = new Model_Profesor();
     DAO_Profesor dao = DAO_Profesor.getDAO();
 
+    @Override
     public void procedure(String opcion, String[] parameters) throws Exception {
         switch (opcion) {
             case "insert": {
@@ -36,6 +37,7 @@ public class Controller_Profesor {
         }
     }
 
+    @Override
     public Profesor function(String opcion, String[] parameters) throws Exception {
         Profesor object = null;
         switch (opcion) {
@@ -52,6 +54,7 @@ public class Controller_Profesor {
         return object;
     }
 
+    @Override
     public List<Profesor> function(String opcion) throws Exception {
         List<Profesor> list = null;
         switch (opcion) {

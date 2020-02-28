@@ -5,11 +5,12 @@ import Logic.Usuario;
 import Model.Model_Usuario;
 import java.util.List;
 
-public class Controller_Usuario {
+public class Controller_Usuario extends Controller<Usuario>{
 
     private final Model_Usuario model = new Model_Usuario();
     DAO_Usuario dao = DAO_Usuario.getDAO();
 
+    @Override
     public void procedure(String opcion, String[] parameters) throws Exception {
         switch (opcion) {
             case "insert": {
@@ -36,6 +37,7 @@ public class Controller_Usuario {
         }
     }
 
+    @Override
     public Usuario function(String opcion, String[] parameters) throws Exception {
         Usuario object = null;
         switch (opcion) {
@@ -58,6 +60,7 @@ public class Controller_Usuario {
         return object;
     }
 
+    @Override
     public List<Usuario> function(String opcion) throws Exception {
         List<Usuario> list = null;
         switch (opcion) {

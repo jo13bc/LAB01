@@ -1,7 +1,9 @@
 
 package Logic;
 
-public class Curso {
+import org.json.JSONObject;
+
+public class Curso extends Instancia{
     private int id;
     private String codigo;
     private String nombre;
@@ -98,5 +100,19 @@ public class Curso {
     @Override
     public String toString() {
         return "Curso:\n\tId: " + id + "\n\tCódigo: " + codigo + "\n\tNombre: " + nombre + "\n\tCreditos: " + creditos + "\n\tHoras Semanales: " + hora_semana + "\n\tAño: " + anno + "\n\tCiclo: " + ciclo + "\n\tCarrera: " + carrera;
+    }
+
+    @Override
+    public JSONObject getJSON() throws Exception{
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("codigo", codigo);
+        json.put("nombre", nombre);
+        json.put("creditos", creditos);
+        json.put("hora_semana", hora_semana);
+        json.put("anno", anno);
+        json.put("ciclo", ciclo);
+        json.put("carrera", carrera);
+        return json;
     }
 }

@@ -1,13 +1,14 @@
-
 package Logic;
 
 import static Logic.Utils.toDate;
 import Parameters.Type_Persona;
+import org.json.JSONObject;
 
-public class Alumno extends Persona{
+public class Alumno extends Persona {
+
     private java.sql.Date fecha_nacimiento;
     private Carrera carrera;
-    
+
     public Alumno(int id, String cedula, String nombre, String ape_1, String ape_2, String tel, String correo, java.util.Date fecha_nacimiento, Carrera carrera) {
         super(Type_Persona.ALUMNO, id, cedula, nombre, ape_1, ape_2, tel, correo);
         this.fecha_nacimiento = toDate(fecha_nacimiento);
@@ -93,7 +94,7 @@ public class Alumno extends Persona{
         this.correo = correo;
     }
 
-    public  java.sql.Date getFecha_nacimiento() {
+    public java.sql.Date getFecha_nacimiento() {
         return fecha_nacimiento;
     }
 
@@ -112,5 +113,19 @@ public class Alumno extends Persona{
     @Override
     public String toString() {
         return "Alumno:\n\tId: " + id + "\n\tCédula: " + cedula + "\n\tNombre: " + nombre + " " + ape_1 + " " + ape_2 + "\n\tTeléfono: " + tel + "\n\tCorreo Electrónico: " + correo + "\n\tFecha de Nacimiento : " + fecha_nacimiento + "\n\tCarrera: " + carrera;
+    }
+
+    @Override
+    public JSONObject getJSON() throws Exception{
+        JSONObject json = new JSONObject();
+        json.put("id", id);
+        json.put("cedula", cedula);
+        json.put("nombre", nombre);
+        json.put("ape1", ape_1);
+        json.put("ape2", ape_2);
+        json.put("tel", tel);
+        json.put("fecha_nacimiento", fecha_nacimiento);
+        json.put("carrera", carrera);
+        return json;
     }
 }

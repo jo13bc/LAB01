@@ -1,0 +1,14 @@
+<!-- Aréa de tabla -->
+<script src="Javascript/tabla.js"></script>
+<div class="card">
+    <div class="card-body" id="table_serch">
+        <div class="row">
+            <div class="table-responsive">
+                <table class="table"  id="table_data">
+                    <thead id="table_head"></thead>
+                    <tbody id="table_body"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
