@@ -1,15 +1,15 @@
 
-/* global parameters_button, message_btn_primary, message_btn_secondary, LINKS, ajax, confirmation_btn_secondary, confirmation_show, curso_btn_secondary */
+/* global parameters_button, message_btn_primary, message_btn_secondary, LINKS, ajax, confirmation_btn_secondary, confirmation_show, curso_btn_secondary, curso_btn_primary */
 
 function crud_curso_init(event) {
-    loadTableHead(['Código', 'Nombre', 'Créditos', 'Horas Semanales', 'Año', 'Ciclo', 'Carrera', 'Acciones']);
+    table_head_init(['Código', 'Nombre', 'Créditos', 'Horas Semanales', 'Año', 'Ciclo', 'Carrera', 'Acciones']);
     init_table();
-    loadTitle();
+    loadTitle('Mantenimiento de cursos');
     loadButton();
     list();
 }
 
-function loadTableHead(parameters) {
+function table_head_init(parameters) {
     var row = document.getElementById("table_head").insertRow(0);
     row.innerHTML = '<th>' + parameters[0] + '</th>' +
             '<th>' + parameters[1] + '</th>' +
@@ -34,6 +34,8 @@ function init_table() {
                 "next": "Siguiente",
                 "previous": "Anterior"
             },
+            "sProcessing": "Procesando...",
+            "sLoadingRecords": "Cargando...",
             "search": "Buscar:",
             "lengthMenu": "Mostrando _MENU_ registros por página",
             "zeroRecords": "Ningún dato disponible en esta tabla",
@@ -80,12 +82,14 @@ function init_table() {
     });
 }
 
-function loadTitle() {
-    document.title = "CRUD CURSOS";
+function loadTitle(title) {
+    document.title = title;
+    document.getElementById('table_title').innerHTML = title;
 }
 
 let crud_curso_btn_primary;
 function loadButton() {
+    document.getElementById("table_button").onclick = insertar;
     crud_curso_btn_primary = document.getElementById("button");
     crud_curso_btn_primary.type = 'submit';
     crud_curso_btn_primary.value = parameters_button.SALIR;
@@ -101,9 +105,10 @@ function salir(evt) {
 
 function insertar() {
     sessionStorage.setItem('curso_type', 1);
+    curso_reset();
     $('#curso_modal').modal('toggle');
     confirmation_load_message('Confirmacíon de la Acción', '¿Esta seguro(a) que desea insertar este curso?');
-    message_btn_primary.onclick = confirmation_show;
+    curso_btn_secondary.onclick = crud_curso_confirmation_show;
     confirmation_btn_secondary.onclick = insert;
 }
 
@@ -142,8 +147,13 @@ const resolve = (f) => {
     return new Promise(resolve => setTimeout(() => resolve(f), 500));
 };
 
-const asyncAll = async () => {
+const hiden_message_modal = async () => {
     const f = await resolve($('#message_modal').modal('hide'));
+};
+
+const toggle_curso_modal = async (status) => {
+    const f = await resolve($('#curso_modal').modal('toggle'));
+    const f2 = await resolve(error_message('Error', status));
 };
 
 function insert() {
@@ -154,13 +164,14 @@ function insert() {
         url: "curso?opcion=insert&" + getCurso()
     }).then((data) => {
         $('#loader').modal('hide');
-        asyncAll().then(() => {
+        hiden_message_modal().then(() => {
             message('Notificación', 'Se ha guardado el curso con éxito', parameters_button.CERRAR);
         });
         crud_curso_load_cursos(data);
     },
             (status) => {
         $('#loader').modal('hide');
+        $('#curso_modal').modal('toggle');
         error_message('Error', status);
     });
 }
@@ -173,7 +184,7 @@ function update() {
         url: "curso?opcion=update&" + getCurso()
     }).then((data) => {
         $('#loader').modal('hide');
-        asyncAll().then(() => {
+        hiden_message_modal().then(() => {
             message('Notificación', 'Se ha guardado la modificación con éxito', parameters_button.CERRAR);
         });
         sessionStorage.setItem('curso_id', undefined);
@@ -181,7 +192,7 @@ function update() {
     },
             (status) => {
         $('#loader').modal('hide');
-        error_message('Error', status);
+        toggle_curso_modal(status);
     });
 }
 
@@ -192,14 +203,14 @@ function remove(id) {
         type: "GET",
         url: "curso?opcion=delete&id=" + id
     }).then((data) => {
-        asyncAll().then(() => {
+        hiden_message_modal().then(() => {
             message_show('Notificación', 'Se ha eliminado el curso con éxito', parameters_button.CERRAR);
         });
         crud_curso_load_cursos(data);
     },
             (status) => {
         $('#loader').modal('hide');
-        error_message('Error', status);
+        toggle_curso_modal(status);
     });
 }
 

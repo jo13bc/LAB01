@@ -2,8 +2,8 @@
 let curso_type = sessionStorage.getItem('curso_type');
 
 const curso_parameters = {
-    TITLE:(curso_type === 1)? 'Ingreso de Curso':'Mantenimiento de Curso',
-    SECONDARY_BUTTON:(curso_type === 1)? parameters_button.INGRESAR:parameters_button.GUARDAR
+    TITLE: (curso_type === 1) ? 'Ingreso de Curso' : 'Mantenimiento de Curso',
+    SECONDARY_BUTTON: (curso_type === 1) ? parameters_button.INGRESAR : parameters_button.GUARDAR
 };
 
 function curso_init() {
@@ -43,7 +43,7 @@ function curso_body_init() {
     curso_body.className = parameters_classes.CLASS_BODY;
 }
 
-function curso_load(id){
+function curso_load(id) {
     $('#confirmation_modal').modal('hide');
     $('#loader').modal('toggle');
     ajax({
@@ -63,6 +63,16 @@ function curso_load(id){
         $('#loader').modal('hide');
         error_message('Error', status);
     });
+}
+
+function curso_reset() {
+    document.getElementById("curso_codigo").value = '';
+    document.getElementById("curso_nombre").value = '';
+    document.getElementById("curso_creditos").value = '';
+    document.getElementById("curso_horas").value = '';
+    document.getElementById("curso_anno").value = '';
+    document.getElementById("curso_ciclo").value = '';
+    document.getElementById("curso_carrera").value = '';
 }
 
 document.addEventListener("DOMContentLoaded", curso_init);

@@ -2,7 +2,6 @@
 <%@ page pageEncoding="UTF-8" %>
 <script src="Javascript/curso.js"></script>
 
-
 <div class="modal fade" id="curso_modal" tabindex="-1" role="dialog" aria-labelledby="curso_title" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div id="curso_content">
