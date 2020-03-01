@@ -547,7 +547,99 @@ END IF;
 END;
 
 /
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------Procesos Carrera--------------------------------------------------
+--Bucar
+PROMPT QUERY_CARRERA
 
+CREATE OR REPLACE FUNCTION query_carrera(P_Carr_id_PK IN TB_Carrera.Carr_id_PK%TYPE)
+
+RETURN TYPES.ref_cursor
+
+AS
+
+CURSOR_CARRERA TYPES.ref_cursor;
+
+BEGIN
+
+OPEN  CURSOR_CARRERA  FOR
+
+SELECT TB_Carrera.Carr_id_PK, TB_Carrera.Carr_codi, TB_Carrera.Carr_nomb, TB_Carrera.Carr_titu FROM TB_Carrera WHERE TB_Carrera.Carr_id_PK = P_Carr_id_PK;
+
+RETURN CURSOR_CARRERA;
+
+END;
+/
+
+---------------------------------------------------------------------------------------------------------------------
+--Insertar
+PROMPT INSERT_CARRERA
+CREATE OR REPLACE PROCEDURE insert_carrera(Carr_codi IN TB_Carrera.Carr_codi%TYPE, Carr_nomb IN TB_Carrera.Carr_nomb%TYPE, Carr_titu IN TB_Carrera.Carr_titu%TYPE)
+
+AS 
+
+BEGIN 
+
+INSERT INTO TB_Carrera VALUES(Carr_sec_id.nextval, Carr_codi, Carr_nomb, Carr_titu);
+
+END;
+/
+
+---------------------------------------------------------------------------------------------------------------------
+--Modificar
+CREATE OR REPLACE PROCEDURE update_carrera(p_id IN TB_Carrera.Carr_id_PK%TYPE, p_codigo IN TB_Carrera.Carr_codi%TYPE,p_nombre IN TB_Carrera.Carr_nomb%TYPE,p_titulo IN TB_Carrera.Carr_titu%TYPE)
+
+AS
+
+BEGIN
+
+UPDATE TB_Carrera SET Carr_codi = p_codigo, Carr_nomb = p_nombre, Carr_titu = p_titulo  WHERE Carr_id_PK = p_id;
+
+END;
+
+/
+---------------------------------------------------------------------------------------------------------------------
+--Eliminar
+PROMPT DELETE_CARRERA
+CREATE OR REPLACE PROCEDURE delete_carrera(P_Carr_id_PK IN TB_Carrera.Carr_id_PK%TYPE)
+
+AS
+
+BEGIN
+
+DELETE FROM TB_Carrera WHERE Carr_id_PK = P_Carr_id_PK;
+
+IF SQL%NOTFOUND THEN
+	RAISE_APPLICATION_ERROR (-20201,'No se encontró ninguna carrera para eliminar con este identificador.');
+END IF;
+
+END;
+
+/
+
+---------------------------------------------------------------------------------------------------------------------
+--Listar Carrera
+PROMPT LIST_CARRERA
+CREATE OR REPLACE FUNCTION list_carrera
+
+RETURN TYPES.REF_CURSOR 
+
+AS 
+
+CURSOR_CARRERA TYPES.REF_CURSOR; 
+
+BEGIN 
+
+OPEN CURSOR_CARRERA FOR 
+
+SELECT Carr_id_PK, Carr_codi, Carr_nomb, Carr_titu FROM TB_Carrera;
+
+RETURN CURSOR_CARRERA; 
+
+END;
+
+/
+---------------------------------------------------------------------------------------------------------------------
 PROMPT #1 inserts Carreras
 insert into TB_Carrera(Carr_id_PK, Carr_codi, Carr_nomb, Carr_titu) values (Carr_sec_id.nextval,'A101', 'Informatica', 'Diplomado');
 insert into TB_Carrera(Carr_id_PK, Carr_codi, Carr_nomb, Carr_titu) values (Carr_sec_id.nextval,'A102', 'Matematica', 'Diplomado');
