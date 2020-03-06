@@ -97,7 +97,6 @@ public class Profesor extends Persona{
     @Override
     public JSONObject getJSON() throws Exception{
         JSONObject json = new JSONObject();
-        json.put("type", type.getValue());
         json.put("id", id);
         json.put("cedula", cedula);
         json.put("nombre", nombre);

@@ -618,38 +618,113 @@ END;
 /
 
 ---------------------------------------------------------------------------------------------------------------------
---Listar Carrera
-PROMPT LIST_CARRERA
-CREATE OR REPLACE FUNCTION list_carrera
+--------------------------------------------------------------------------------------------------------------------
+--------------------------------------------------Procesos Ciclo--------------------------------------------------
+--Insertar
+PROMPT INSERT_CICLO
+CREATE OR REPLACE PROCEDURE insert_ciclo(Cicl_anno IN TB_Ciclo.Cicl_anno%TYPE,
+Cicl_nume IN TB_Ciclo.Cicl_nume%TYPE, Cicl_fech_inic IN TB_Ciclo.Cicl_fech_inic%TYPE, Cicl_fech_fina IN TB_Ciclo.Cicl_fech_fina%TYPE)
+
+AS 
+
+BEGIN 
+
+INSERT INTO TB_Ciclo VALUES(Cicl_sec_id.nextval, Cicl_anno, Cicl_nume, Cicl_fech_inic, Cicl_fech_fina);
+
+END;
+/
+
+---------------------------------------------------------------------------------------------------------------------
+--Modificar
+CREATE OR REPLACE PROCEDURE update_ciclo(p_Cicl_id_PK IN TB_Ciclo.Cicl_id_PK%TYPE, p_Cicl_anno IN TB_Ciclo.Cicl_anno%TYPE,
+p_Cicl_nume IN TB_Ciclo.Cicl_nume%TYPE, p_Cicl_fech_inic IN TB_Ciclo.Cicl_fech_inic%TYPE, p_Cicl_fech_fina IN TB_Ciclo.Cicl_fech_fina%TYPE)
+
+AS
+
+BEGIN
+
+UPDATE TB_Ciclo SET Cicl_anno = p_Cicl_anno, Cicl_nume = p_Cicl_nume, Cicl_fech_inic = p_Cicl_fech_inic, Cicl_fech_fina = p_Cicl_fech_fina  WHERE Cicl_id_PK = p_Cicl_id_PK;
+
+END;
+
+/
+
+---------------------------------------------------------------------------------------------------------------------
+--Buscar
+PROMPT QUERY_CICLO
+
+CREATE OR REPLACE FUNCTION query_ciclo(P_Cicl_id_PK IN TB_Ciclo.Cicl_id_PK%TYPE)
+
+RETURN TYPES.ref_cursor
+
+AS
+
+CURSOR_CICLO TYPES.ref_cursor;
+
+BEGIN
+
+OPEN  CURSOR_CICLO  FOR
+
+SELECT Cicl_id_PK, Cicl_anno, Cicl_nume, Cicl_fech_inic, Cicl_fech_fina FROM TB_Ciclo WHERE Cicl_id_PK = P_Cicl_id_PK;
+
+RETURN CURSOR_CICLO;
+
+END;
+/
+
+---------------------------------------------------------------------------------------------------------------------
+--Listar Ciclera
+PROMPT LIST_CICLO
+CREATE OR REPLACE FUNCTION list_ciclo
 
 RETURN TYPES.REF_CURSOR 
 
 AS 
 
-CURSOR_CARRERA TYPES.REF_CURSOR; 
+CURSOR_CICLO TYPES.REF_CURSOR; 
 
 BEGIN 
 
-OPEN CURSOR_CARRERA FOR 
+OPEN CURSOR_CICLO FOR 
 
-SELECT Carr_id_PK, Carr_codi, Carr_nomb, Carr_titu FROM TB_Carrera;
+SELECT Cicl_id_PK, Cicl_anno, Cicl_nume, Cicl_fech_inic, Cicl_fech_fina FROM TB_Ciclo;
 
-RETURN CURSOR_CARRERA; 
+RETURN CURSOR_CICLO; 
 
 END;
 
 /
+
+---------------------------------------------------------------------------------------------------------------------
+--Eliminar
+PROMPT DELETE_CICLO
+CREATE OR REPLACE PROCEDURE delete_ciclo(P_Cicl_id_PK IN TB_Ciclo.Cicl_id_PK%TYPE)
+
+AS
+
+BEGIN
+
+DELETE FROM TB_Ciclo WHERE Cicl_id_PK = P_Cicl_id_PK;
+
+IF SQL%NOTFOUND THEN
+	RAISE_APPLICATION_ERROR (-20201,'No se encontró ningún ciclo para eliminar con este identificador.');
+END IF;
+
+END;
+
+/
+
 ---------------------------------------------------------------------------------------------------------------------
 PROMPT #1 inserts Carreras
-insert into TB_Carrera(Carr_id_PK, Carr_codi, Carr_nomb, Carr_titu) values (Carr_sec_id.nextval,'A101', 'Informatica', 'Diplomado');
-insert into TB_Carrera(Carr_id_PK, Carr_codi, Carr_nomb, Carr_titu) values (Carr_sec_id.nextval,'A102', 'Matematica', 'Diplomado');
-insert into TB_Carrera(Carr_id_PK, Carr_codi, Carr_nomb, Carr_titu) values (Carr_sec_id.nextval,'A103', 'Agronomia', 'Bachillerato');
-insert into TB_Carrera(Carr_id_PK, Carr_codi, Carr_nomb, Carr_titu) values (Carr_sec_id.nextval,'A104', 'Topografia', 'Bachillerato');
+call insert_carrera('A101', 'Informatica', 'Diplomado');
+call insert_carrera('A102', 'Matematica', 'Diplomado');
+call insert_carrera('A103', 'Agronomia', 'Bachillerato');
+call insert_carrera('A104', 'Topografia', 'Bachillerato');
 select * from TB_Carrera;
 
 PROMPT #1 inserts Ciclos
-insert into TB_Ciclo(Cicl_id_PK, Cicl_anno, Cicl_nume, Cicl_fech_inic, Cicl_fech_fina) values (Cicl_sec_id.nextval, 2020, 1, to_date('12-02-2020','DD-MM-YYYY'), to_date('12-07-2020','DD-MM-YYYY'));
-insert into TB_Ciclo(Cicl_id_PK, Cicl_anno, Cicl_nume, Cicl_fech_inic, Cicl_fech_fina) values (Cicl_sec_id.nextval, 2020, 2, to_date('12-07-2020','DD-MM-YYYY'), to_date('12-11-2020','DD-MM-YYYY'));
+call insert_ciclo(2020, 1, to_date('12-02-2020','DD-MM-YYYY'), to_date('12-07-2020','DD-MM-YYYY'));
+call insert_ciclo(2020, 2, to_date('12-07-2020','DD-MM-YYYY'), to_date('12-11-2020','DD-MM-YYYY'));
 select * from TB_Ciclo;
 
 PROMPT #1 inserts Cursos

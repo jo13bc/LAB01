@@ -10,7 +10,7 @@ import static Logic.Utils.verify_count_of_parameters;
 public class Model_Carrera {
 
     public Carrera verify_without_id(String[] parameters) throws Exception {
-        verify_count_of_parameters(parameters, 7);
+        verify_count_of_parameters(parameters, 3);
         //
         Carrera objeto = new Carrera();
         //
@@ -21,7 +21,7 @@ public class Model_Carrera {
     }
     
     public Carrera verify_with_id(String[] parameters) throws Exception {
-        verify_count_of_parameters(parameters, 8);
+        verify_count_of_parameters(parameters, 4);
         //
         Carrera objeto = new Carrera();
         //

@@ -111,8 +111,8 @@ public class Curso extends Instancia{
         json.put("creditos", creditos);
         json.put("hora_semana", hora_semana);
         json.put("anno", anno);
-        json.put("ciclo", ciclo);
-        json.put("carrera", carrera);
+        json.put("ciclo", ciclo.getJSON());
+        json.put("carrera", carrera.getJSON());
         return json;
     }
 }

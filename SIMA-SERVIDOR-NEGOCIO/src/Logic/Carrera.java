@@ -5,7 +5,9 @@ import org.json.JSONObject;
 public class Carrera extends Instancia {
 
     private int id;
-    private String codigo, nombre, titulo;
+    private String codigo;
+    private String nombre;
+    private String titulo;
 
     public Carrera(int id, String codigo, String nombre, String titulo) {
         this.id = id;
@@ -57,7 +59,6 @@ public class Carrera extends Instancia {
     @Override
     public String toString() {
         return "Carrera:\n\tId: " + id + "\n\tCódigo: " + codigo + "\n\tNombre: " + nombre + "\n\tTitulo: " + titulo;
-
     }
 
     @Override

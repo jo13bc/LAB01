@@ -2,6 +2,7 @@ package Server;
 
 import Controller.Controller;
 import Controller.Controller_Alumno;
+import Controller.Controller_Carrera;
 import Controller.Controller_Curso;
 import Controller.Controller_Profesor;
 import Controller.Controller_Usuario;
@@ -138,6 +139,10 @@ public class Server {
             break;
             case "curso": {
                 controller = new Controller_Curso();
+            }
+            break;
+            case "carrera": {
+                controller = new Controller_Carrera();
             }
             break;
             default: {
