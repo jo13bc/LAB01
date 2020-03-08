@@ -129,6 +129,11 @@ public class DAO_Curso extends Service {
             }
             return pstmt;
         });
+        list.forEach((object) -> {
+            object.setCarrera(
+                    DAO_Carrera.getDAO().query(object.getCarrera())
+            );
+        });
         return list;
     }
 

@@ -5,7 +5,9 @@ import org.json.JSONObject;
 public class Carrera extends Instancia {
 
     private int id;
-    private String codigo, nombre, titulo;
+    private String codigo;
+    private String nombre;
+    private String titulo;
 
     public Carrera(int id, String codigo, String nombre, String titulo) {
         this.id = id;
@@ -16,6 +18,10 @@ public class Carrera extends Instancia {
 
     public Carrera() {
         this(-1, null, null, null);
+    }
+
+    public Carrera(int id) {
+        this.id = id;
     }
 
     public int getId() {

@@ -132,8 +132,8 @@ function eliminar(curso) {
     };
 }
 
-function getCurso() {
-    return 'id=' + sessionStorage.getItem('curso_id') +
+function getCurso(id) {
+    return 'id=' + id +
             '&codigo=' + document.getElementById('curso_codigo').value +
             '&nombre=' + document.getElementById('curso_nombre').value +
             '&creditos=' + document.getElementById('curso_creditos').value +
@@ -143,19 +143,6 @@ function getCurso() {
             '&carrera=' + document.getElementById('curso_carrera').value;
 }
 
-const resolve = (f) => {
-    return new Promise(resolve => setTimeout(() => resolve(f), 500));
-};
-
-const hiden_message_modal = async () => {
-    const f = await resolve($('#message_modal').modal('hide'));
-};
-
-const toggle_curso_modal = async (status) => {
-    const f = await resolve($('#curso_modal').modal('toggle'));
-    const f2 = await resolve(error_message('Error', status));
-};
-
 function insert() {
     $('#confirmation_modal').modal('hide');
     $('#loader').modal('toggle');
@@ -164,35 +151,33 @@ function insert() {
         url: "curso?opcion=insert&" + getCurso()
     }).then((data) => {
         $('#loader').modal('hide');
-        hiden_message_modal().then(() => {
-            message('Notificación', 'Se ha guardado el curso con éxito', parameters_button.CERRAR);
-        });
+        $('#curso_modal').modal('hide');
+        message('Notificación', 'Se ha guardado el curso con éxito', parameters_button.CERRAR);
         crud_curso_load_cursos(data);
     },
             (status) => {
         $('#loader').modal('hide');
         $('#curso_modal').modal('toggle');
-        error_message('Error', status);
+        error_message_show('Error', status);
     });
 }
 
-function update() {
+function update(id) {
     $('#confirmation_modal').modal('hide');
     $('#loader').modal('toggle');
     ajax({
         type: "GET",
-        url: "curso?opcion=update&" + getCurso()
+        url: "curso?opcion=update&" + getCurso(id)
     }).then((data) => {
         $('#loader').modal('hide');
-        hiden_message_modal().then(() => {
-            message('Notificación', 'Se ha guardado la modificación con éxito', parameters_button.CERRAR);
-        });
-        sessionStorage.setItem('curso_id', undefined);
+        $('#curso_modal').modal('hide');
+        message('Notificación', 'Se ha guardado la modificación con éxito', parameters_button.CERRAR);
         crud_curso_load_cursos(data);
     },
             (status) => {
         $('#loader').modal('hide');
-        toggle_curso_modal(status);
+        $('#curso_modal').modal('toggle');
+        error_message_show('Error', status);
     });
 }
 
@@ -203,14 +188,12 @@ function remove(id) {
         type: "GET",
         url: "curso?opcion=delete&id=" + id
     }).then((data) => {
-        hiden_message_modal().then(() => {
-            message_show('Notificación', 'Se ha eliminado el curso con éxito', parameters_button.CERRAR);
-        });
+        message_show('Notificación', 'Se ha eliminado el curso con éxito', parameters_button.CERRAR);
         crud_curso_load_cursos(data);
     },
             (status) => {
         $('#loader').modal('hide');
-        toggle_curso_modal(status);
+        error_message_show('Error', status);
     });
 }
 
@@ -225,7 +208,7 @@ function list() {
     },
             (status) => {
         $('#loader').modal('hide');
-        message('Error', status, parameters_button.CERRAR);
+        error_message_show('Error', status);
     });
 }
 
@@ -291,8 +274,8 @@ function crud_curso_load_cursos(data) {
             {"data": 'creditos'},
             {"data": 'hora_semana'},
             {"data": 'anno'},
-            {"data": 'ciclo.id'},
-            {"data": 'carrera.id'},
+            {"data": 'ciclo.numero'},
+            {"data": 'carrera.nombre'},
             {"defaultContent":
                         '\
                     <button data-toggle="modal" data-target="#curso_modal" class="btn update" title="Editar">\n\

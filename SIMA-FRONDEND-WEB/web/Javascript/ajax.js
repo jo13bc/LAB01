@@ -1,5 +1,5 @@
 
-/* global parameters, error_parameters */
+/* global parameters, error_parameters, loader_progress_bar */
 
 const error_parameters = {
     _404: 'Registro no encontrado',
@@ -19,13 +19,15 @@ const parameters = {
 function ajax(config) {
     var promiseObj = new Promise((resolve, reject) => {
         //
-        
-        var request = (window.XMLHttpRequest)? new XMLHttpRequest():new ActiveXObject(parameters.SERVER_NAME);
+        var request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject(parameters.SERVER_NAME);
         //
         request.open(config.type, config.url, true);
         if (config.type === parameters.POST || config.type === parameters.PUT) {
             request.setRequestHeader(parameters.CONTENT_TYPE, config.contentType);
         }
+        //
+        request.upload.onprogress = loader_progress_bar;
+        request.onprogress = loader_progress_bar;
         //
         request.setRequestHeader(parameters.HEADER, parameters.VALUE);
         request.onreadystatechange = () => {

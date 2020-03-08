@@ -14,8 +14,8 @@
             <div id="confirmation_body">
             </div>
             <div id="confirmation_footer">
-                <button id="confirmation_btn_primary" type="button"></button>
-                <button id="confirmation_btn_secondary" type="button" data-dismiss="modal"></button>
+                <button id="confirmation_btn_primary" type="button" data-dismiss="modal"></button>
+                <button id="confirmation_btn_secondary" type="button"></button>
             </div>
         </div>
     </div>

@@ -118,7 +118,6 @@ public class Alumno extends Persona {
     @Override
     public JSONObject getJSON() throws Exception{
         JSONObject json = new JSONObject();
-        json.put("type", type.getValue());
         json.put("id", id);
         json.put("cedula", cedula);
         json.put("nombre", nombre);
@@ -126,7 +125,7 @@ public class Alumno extends Persona {
         json.put("ape2", ape_2);
         json.put("tel", tel);
         json.put("fecha_nacimiento", fecha_nacimiento);
-        json.put("carrera", carrera.getJSON());
+        json.put("carrera", carrera);
         return json;
     }
 }
