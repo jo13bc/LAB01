@@ -1,28 +1,30 @@
-package views.ViewCarrera;
+package view.ViewCurso;
 
-import DomRestfull.API.Object.Carreras;
+
+import DomRestfull.API.Object.Cursos;
 import DomRestfull.API.Object.Login;
 import DomRestfull.API.Object.Tabla;
-import Logic.Carrera;
+import DomRestfull.API.Object.TablaCurso;
+import Logic.Curso;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import modelo.ModeloCarrera;
+import modelo.ModeloCurso;
 
-public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
+public class ViewCursoBuscar extends javax.swing.JFrame implements Observer {
 
-    private ModeloCarrera model;
-    private Tabla tabla;
+    private ModeloCurso model;
+    private TablaCurso tabla;
 
-    public ViewCarreraBuscar(ModeloCarrera model) {
+    public ViewCursoBuscar(ModeloCurso model) {
         this.model = model;
         this.tabla = model.getTabla();
         initComponents();
     }
 
-    public void addListeners(Carreras model) {
+    public void addListeners(Cursos model) {
         queryCodigo.addActionListener(model);
     }
 
@@ -38,6 +40,8 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
         codigoText = new javax.swing.JTextField();
         nombreText = new javax.swing.JTextField();
         queryCodigo = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -69,30 +73,35 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
         queryCodigo.setText("Buscar");
         queryCodigo.setActionCommand("queryCodigo");
 
+        jLabel1.setText("Carrera");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(queryCodigo)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(21, 21, 21)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(29, 29, 29)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGap(75, 75, 75)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(N)
-                                .addComponent(cod))
-                            .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(29, 29, 29)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(75, 75, 75)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(N)
+                            .addComponent(cod)
+                            .addComponent(jLabel1))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(codigoText, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
-                                .addComponent(nombreText)))))
-                .addContainerGap(58, Short.MAX_VALUE))
+                                .addComponent(nombreText))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
+                        .addGap(219, 219, 219)
+                        .addComponent(queryCodigo)))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,7 +117,11 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
                     .addComponent(N)
                     .addComponent(nombreText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(queryCodigo)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(queryCodigo, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -121,8 +134,8 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
         try {
             if (evt.getClickCount() == 1) {
                 int row = this.jTable1.getSelectedRow();
-                Carrera seleccionado = model.getTabla().getRowAt(row);
-                new Carreras("Edicion", seleccionado);
+                Curso seleccionado = model.getTabla().getRowAt(row);
+                new Cursos("Edicion", seleccionado);
 
             }
         } catch (Exception ex) {
@@ -146,15 +159,6 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
         this.codigoText = codigoText;
     }
 
-    public JTextField getNombre() {
-        return nombreText;
-    }
-
-    public void setNombre(JTextField nombreText) {
-        this.nombreText = nombreText;
-    }
-
-    
     public JTable getjTable1() {
         return jTable1;
     }
@@ -167,9 +171,11 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
     private javax.swing.JLabel N;
     private javax.swing.JLabel cod;
     private javax.swing.JTextField codigoText;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField nombreText;
     private javax.swing.JButton queryCodigo;
     // End of variables declaration//GEN-END:variables

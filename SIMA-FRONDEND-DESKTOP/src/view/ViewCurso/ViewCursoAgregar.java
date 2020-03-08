@@ -1,22 +1,21 @@
-package views.ViewCarrera;
+package view.ViewCurso;
 
 
-
-import DomRestfull.API.Object.Carreras;
+import DomRestfull.API.Object.Cursos;
 import DomRestfull.API.Object.Login;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JTextField;
 
 
-public class ViewCarreraAgregar extends javax.swing.JFrame implements Observer {
+public class ViewCursoAgregar extends javax.swing.JFrame implements Observer {
 
  
-    public ViewCarreraAgregar() {
+    public ViewCursoAgregar() {
         initComponents();
     }
 
-    public void addListeners(Carreras controller) {
+    public void addListeners(Cursos controller) {
        insert.addActionListener(controller);
     }
 
