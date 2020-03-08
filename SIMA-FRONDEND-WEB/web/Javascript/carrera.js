@@ -17,6 +17,13 @@ function carrera_classes_init() {
     document.getElementById('carrera_header').className = parameters_classes.CLASS_HEADER;
     document.getElementById('carrera_content').className = parameters_classes.CLASS_CONTENT;
     document.getElementById('carrera_footer').className = parameters_classes.CLASS_FOOTER;
+    $(document).on('show.bs.modal', '.modal', function () {
+        var zIndex = 1040 + (10 * $('.modal:visible').length);
+        $(this).css('z-index', zIndex);
+        setTimeout(function () {
+            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+        }, 0);
+    });
 }
 
 let carrera_title;

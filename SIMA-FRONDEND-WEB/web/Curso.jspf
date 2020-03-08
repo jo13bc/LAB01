@@ -2,7 +2,7 @@
 <%@ page pageEncoding="UTF-8" %>
 <script src="Javascript/curso.js"></script>
 
-<div class="modal fade" id="carrera_modal" tabindex="-1" role="dialog" aria-labelledby="curso_title" aria-hidden="true">
+<div class="modal fade" id="curso_modal" tabindex="-1" role="dialog" aria-labelledby="curso_title" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div id="curso_content">
             <div id="curso_header">
@@ -25,7 +25,7 @@
                         <label for="curso_nombre">Nombre:</label>
                     </div>
                     <div class="col">
-                        <input type="text" class="form-control" id="carrera_nombre">
+                        <input type="text" class="form-control" id="curso_nombre">
                     </div>
                 </div>
                 <div class="form-row">

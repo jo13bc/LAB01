@@ -12,6 +12,13 @@ function confirmation_classes_init() {
     document.getElementById('confirmation_header').className = parameters_classes.CLASS_HEADER;
     document.getElementById('confirmation_content').className = parameters_classes.CLASS_CONTENT;
     document.getElementById('confirmation_footer').className = parameters_classes.CLASS_FOOTER;
+    $(document).on('show.bs.modal', '.modal', function () {
+        var zIndex = 1040 + (10 * $('.modal:visible').length);
+        $(this).css('z-index', zIndex);
+        setTimeout(function () {
+            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+        }, 0);
+    });
 }
 
 let confirmation_body;
@@ -39,18 +46,18 @@ function confirmation_button_init() {
     confirmation_btn_secondary.innerHTML = parameters_button.ACEPTAR;
 }
 
-function confirmation_load_message(title, message){
+function confirmation_load_message(title, message) {
     confirmation_title.innerHTML = title;
-    confirmation_body.innerHTML = confirmation_label('',message);
+    confirmation_body.innerHTML = confirmation_label('', message);
 }
 
-function confirmation_show(){
+function confirmation_show() {
     $('#confirmation_modal').modal('toggle');
 }
 
 function confirmation_label(property, value) {
     return (value !== undefined) ? "<label class='" + parameters_classes.CLASS_LABEL +
-        "'>" + property + value + "</label>" : '';
+            "'>" + property + value + "</label>" : '';
 }
 
 document.addEventListener("DOMContentLoaded", confirmation_init);

@@ -113,3 +113,8 @@ h1{
 .txt-right{
     text-align: right;
 }
+
+.modal{
+    margin-top: 15px;
+    background-color: rgba(0,0,0, 0.3);
+}

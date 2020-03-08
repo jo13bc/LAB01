@@ -11,6 +11,13 @@ function message_classes_init() {
     document.getElementById('message_header').className = parameters_classes.CLASS_HEADER;
     document.getElementById('message_content').className = parameters_classes.CLASS_CONTENT;
     document.getElementById('message_footer').className = parameters_classes.CLASS_FOOTER;
+    $(document).on('show.bs.modal', '.modal', function () {
+        var zIndex = 1040 + (10 * $('.modal:visible').length);
+        $(this).css('z-index', zIndex);
+        setTimeout(function () {
+            $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+        }, 0);
+    });
 }
 
 let message_title;
