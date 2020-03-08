@@ -33,7 +33,7 @@ public class Menu implements ActionListener, MouseListener {
         String proccess = "function";
         switch (opcion) {
             case "Carreras": {
-             new Carrera("Menu");
+             new Carreras("Menu");
             }
             break;
             

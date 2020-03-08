@@ -1,5 +1,6 @@
 package DomRestfull.API.Object;
 
+import Logic.Usuario;
 import Server.Client;
 import Server.Message;
 import Server.Packet;
@@ -29,6 +30,7 @@ public class Login implements ActionListener, MouseListener {
         String opcion = e.getActionCommand();
         ArrayList<String> args = new ArrayList();
         String proccess = "function";
+        Usuario user = null;
         switch (opcion) {
             case "login": {
                 args.add(viewLogin.getUsuario().getText());
@@ -38,7 +40,8 @@ public class Login implements ActionListener, MouseListener {
             break;
         }
         try {
-            Packet name = Client.getClient().ejecutarConexion(new Message("usuario", proccess, opcion, args), 5050);
+            user = (Usuario) ((Packet) Client.getClient().ejecutarConexion(new Message("usuario", proccess, opcion, args), 5050)).getResponse();
+            new Menu();
         } catch (Exception ex) {
             Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }

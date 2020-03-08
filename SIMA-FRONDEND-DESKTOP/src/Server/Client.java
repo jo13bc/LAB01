@@ -106,15 +106,20 @@ public class Client {
         String result;
         switch (opcion) {
             case "insert": {
+                result = "procedure";
+                System.out.print("fffffffffffffff");
             }
+            break;
             case "delete": {
+                result = "procedure";
             }
+            break;
             case "update": {
                 result = "procedure";
             }
             break;
             default: {
-                result = "function";
+                result = "functionMult";
             }
         }
         return result;
