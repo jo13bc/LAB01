@@ -6,6 +6,7 @@ import DomRestfull.API.Object.Carreras;
 import DomRestfull.API.Object.Login;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 
@@ -20,6 +21,9 @@ public class ViewCarreraAgregar extends javax.swing.JFrame implements Observer {
        insert.addActionListener(controller);
     }
 
+    public void aviso(String mensaje){
+        JOptionPane.showMessageDialog(this, mensaje);
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -43,7 +47,7 @@ public class ViewCarreraAgregar extends javax.swing.JFrame implements Observer {
 
         N.setText("Nombre");
 
-        insert.setText("Agregar");
+        insert.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/Imagenes/save.png"))); // NOI18N
         insert.setActionCommand("insert");
 
         Titulo.setText("Titulo");
@@ -92,9 +96,9 @@ public class ViewCarreraAgregar extends javax.swing.JFrame implements Observer {
                         .addGap(18, 18, 18)
                         .addComponent(Titulo))
                     .addComponent(tituloText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addComponent(insert)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();

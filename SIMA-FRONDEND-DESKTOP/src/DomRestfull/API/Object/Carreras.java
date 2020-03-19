@@ -1,36 +1,35 @@
 package DomRestfull.API.Object;
 
-//import Logic.Carrera;
-//import Logic.Carrera;
+
 import Logic.Carrera;
+import Logic.Curso;
 import Server.Client;
 import Server.Message;
-import Server.Packet;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
 import modelo.ModeloCarrera;
+import modelo.ModeloCurso;
 import views.ViewCarrera.ViewCarreraAgregar;
 import views.ViewCarrera.ViewCarreraBuscar;
+import views.ViewCarrera.ViewCarreraCurso;
 import views.ViewCarrera.ViewCarreraEditar;
 import views.ViewCarrera.ViewCarreraMenu;
+import views.ViewCarrera.ViewListaCarreras;
 
 public class Carreras implements ActionListener, MouseListener {
 
     private ModeloCarrera model = new ModeloCarrera();
+    private ModeloCurso modelCurso = new ModeloCurso();
     private ViewCarreraMenu viewCarreraMenu;
     private ViewCarreraBuscar viewCarreraBuscar;
     private ViewCarreraAgregar viewCarreraAgregar;
     private ViewCarreraEditar viewCarreraEditar;
-    private Tabla tabla;
-    private ArrayList<Carrera> detalles;
+    private ViewCarreraCurso viewCarreraCurso;
+    private ViewListaCarreras viewListaCarreras;
+    private ArrayList<Curso> cursos;
 
     public Carreras(String view) {
         switch (view) {
@@ -59,6 +58,7 @@ public class Carreras implements ActionListener, MouseListener {
         switch (view) {
             case "Edicion":
                 this.viewCarreraEditar = new ViewCarreraEditar(model, actual);
+                this.viewCarreraEditar.init();
                 model.addObserver(viewCarreraEditar);
                 viewCarreraEditar.addListeners(this);
                 viewCarreraEditar.setVisible(true);
@@ -89,15 +89,12 @@ public class Carreras implements ActionListener, MouseListener {
         return var;
     }
 
-    public String verificaOpcion(String opcion) {
-        String nueva = opcion;
-        if (!(viewCarreraBuscar.getCodigo().getText().isEmpty())) {
-            nueva = "queryCodigo";
+    public String verificaOpcion() {
+        if ("Código".equals(viewCarreraBuscar.ComboBox())) {
+            return "queryCodigo";
+        } else {
+            return "queryNombre";
         }
-        if (!(viewCarreraBuscar.getNombre().getText().isEmpty())) {
-            nueva = "queryNombre";
-        }
-        return nueva;
     }
 
     @Override
@@ -109,20 +106,19 @@ public class Carreras implements ActionListener, MouseListener {
         String result;
 
         int caso = verificaAccion(opcion);
-        if("queryCodigo".equals(opcion)){
-            opcion = verificaOpcion(opcion);
+        if ("queryCodigo".equals(opcion)) {
+            opcion = verificaOpcion();
         }
-        
+
         if (caso == 0) {
             switch (opcion) {
                 case "queryCodigo": {
-                    args.add(viewCarreraBuscar.getCodigo().getText());
+                    args.add(viewCarreraBuscar.getBusquedaText().getText());
                     proccess = "functionMult";
                 }
                 break;
                 case "queryNombre": {
-                    String fff = viewCarreraBuscar.getNombre().getText();
-                    args.add(viewCarreraBuscar.getNombre().getText());
+                    args.add(viewCarreraBuscar.getBusquedaText().getText());
                     proccess = "functionMult";
                 }
                 break;
@@ -139,31 +135,50 @@ public class Carreras implements ActionListener, MouseListener {
                     proccess = "procedure";
                 }
                 break;
-            }
-            if (opcion.equals("queryCodigo") || opcion.equals("queryNombre")) {
-                try {
-                    carreras = (ArrayList<Carrera>) Client.getClient().ejecutarConexion(new Message("carrera", proccess, opcion, args), 5050).getResponse();
-                    model.updateTable(carreras);
-
-                } catch (Exception ex) {
-                    Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
+                case "update": {
+                    viewCarreraEditar.actualizar();
+                    args.add(String.valueOf(viewCarreraEditar.getCarrera().getId()));
+                    args.add(viewCarreraEditar.getCarrera().getCodigo());
+                    args.add(viewCarreraEditar.getCarrera().getNombre());
+                    args.add(viewCarreraEditar.getCarrera().getTitulo());
+                    proccess = "procedure";
                 }
-            } else {
+                break;
+                case "query": {
+                    viewCarreraEditar.actualizar();
+                    args.add(String.valueOf(viewCarreraEditar.getCarrera().getId()));
+                    proccess = "procedure";
+                }
+                break;
+            }
+            if (opcion.equals("query")) {
                 try {
-                    result = Client.getClient().ejecutarConexion(new Message("carrera", proccess, opcion, args), 5050).getResponse().toString();
-                    result = ((ArrayList<Carrera>) Client.getClient()
-                            .ejecutarConexion(new Message("carrera", proccess, opcion, args), 5000)
-                            .getResponse()).stream()
-                            .map((x) -> {
-                                try {
-                                    return x.getJSON().toString();
-                                } catch (Exception ex) {
-                                    throw new RuntimeException(ex.getMessage());
-                                }
-                            })
-                            .collect(Collectors.toList()).toString();
+                    cursos = (ArrayList<Curso>) Client.getClient().ejecutarConexion(new Message("curso", "functionMult", "queryCarrera", args), 5050).getResponse();
+                    ArrayList<Curso> cursos_carrera = verificaCarrera(cursos, viewCarreraEditar.getCarrera());
+                    modelCurso.updateTable(cursos_carrera);
+                    this.viewCarreraCurso = new ViewCarreraCurso(modelCurso);
+                    model.addObserver(viewCarreraCurso);
+                    viewCarreraCurso.setVisible(true);
                 } catch (Exception ex) {
-                    Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
+                    avisosFallo(opcion);
+                }
+
+            } else {
+                if (opcion.equals("queryCodigo") || opcion.equals("queryNombre")) {
+                    try {
+                        carreras = (ArrayList<Carrera>) Client.getClient().ejecutarConexion(new Message("carrera", proccess, opcion, args), 5050).getResponse();
+                        model.updateTable(carreras);
+
+                    } catch (Exception ex) {
+                        avisosFallo(opcion);
+                    }
+                } else {
+                    try {
+                        carreras = (ArrayList<Carrera>) Client.getClient().ejecutarConexion(new Message("carrera", proccess, opcion, args), 5050).getResponse();
+                        actualizar(opcion, carreras);
+                    } catch (Exception ex) {
+                        avisosFallo(opcion);
+                    }
                 }
             }
         } else {
@@ -180,7 +195,89 @@ public class Carreras implements ActionListener, MouseListener {
         }
     }
 
+    public void actualizar(String opcion, ArrayList<Carrera> carreras) {
+        switch (opcion) {
+            case "insert": {
+                viewCarreraAgregar.aviso("Datos guardados");
+
+                ArrayList<Carrera> n = new ArrayList<Carrera>();
+                n.add(carreras.get(carreras.size() - 1));
+                viewCarreraAgregar.setVisible(false);
+                model.updateTable(n);
+                VistaListaCarreras(model);
+                        
+            }
+            break;
+            case "delete": {
+                viewCarreraEditar.aviso("Datos eliminados");
+                viewCarreraEditar.setVisible(false);
+            }
+            break;
+            case "update": {
+                Carrera c = new Carrera();
+                ArrayList<Carrera> n = new ArrayList<Carrera>();
+                for (int i = 0; i < carreras.size(); i++) {
+                    if (carreras.get(i).getId() == viewCarreraEditar.getCarrera().getId()) {
+                        c = carreras.get(i);
+                    }
+                }
+                n.add(c);
+                viewCarreraEditar.aviso("Datos editados");
+                viewCarreraEditar.setVisible(false);
+                model.updateTable(n);
+                VistaListaCarreras(model);
+            }
+            break;
+        }
+
+    }
+
+    public void avisosFallo(String opcion) {
+        switch (opcion) {
+            case "insert": {
+                viewCarreraAgregar.aviso("Datos incorrectos");
+            }
+            break;
+            case "delete": {
+                viewCarreraEditar.aviso("No se puede eliminar");
+            }
+            break;
+            case "update": {
+                viewCarreraEditar.aviso("Datos incorrectos");
+            }
+            break;
+            case "query": {
+                viewCarreraEditar.aviso("No tiene Cursos Asignados");
+            }
+            break;
+            default: {
+                viewCarreraBuscar.aviso("Datos no encontrados");
+                viewCarreraBuscar.limpiar();
+            }
+            break;
+        }
+    }
+
+    public ArrayList<Curso> verificaCarrera(ArrayList<Curso> cursos, Carrera actual) {
+        ArrayList<Curso> cursos_carrera = new ArrayList<Curso>();
+
+        for (int i = 0; i < cursos.size(); i++) {
+            if (cursos.get(i).getCarrera().getId() == actual.getId()) {
+                cursos_carrera.add(cursos.get(i));
+            }
+        }
+
+        return cursos_carrera;
+    }
+
+    public void VistaListaCarreras(ModeloCarrera model) {
+        this.viewListaCarreras = new ViewListaCarreras(model);
+        model.addObserver(viewListaCarreras);
+        viewListaCarreras.setVisible(true);
+    }
+
     @Override
+
     public void mouseClicked(MouseEvent arg0
     ) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

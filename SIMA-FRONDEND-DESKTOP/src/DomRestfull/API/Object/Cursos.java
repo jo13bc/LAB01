@@ -2,37 +2,38 @@ package DomRestfull.API.Object;
 
 //import Logic.Curso;
 //import Logic.Curso;
+import Logic.Carrera;
 import Logic.Curso;
 import Server.Client;
 import Server.Message;
-import Server.Packet;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+import modelo.ModeloCarrera;
 import modelo.ModeloCurso;
 import view.ViewCurso.ViewCursoAgregar;
 import view.ViewCurso.ViewCursoBuscar;
 import view.ViewCurso.ViewCursoEditar;
 import view.ViewCurso.ViewCursoMenu;
+import view.ViewCurso.ViewListaCursos;
 
 public class Cursos implements ActionListener, MouseListener {
 
     private ModeloCurso model = new ModeloCurso();
+    private ModeloCarrera modelCarrera = new ModeloCarrera();
     private ViewCursoMenu viewCursoMenu;
     private ViewCursoBuscar viewCursoBuscar;
     private ViewCursoAgregar viewCursoAgregar;
     private ViewCursoEditar viewCursoEditar;
-    private Tabla tabla;
-    private ArrayList<Curso> detalles;
+    private ViewListaCursos viewListaCursos;
+    private ArrayList<Carrera> carreras;
+    ArrayList<String> args = new ArrayList<String>();
 
-    public Cursos(String view) {
+    public Cursos(String view) throws Exception {
         switch (view) {
             case "Menu":
                 this.viewCursoMenu = new ViewCursoMenu();
@@ -42,7 +43,10 @@ public class Cursos implements ActionListener, MouseListener {
                 break;
 
             case "Agregar":
-                this.viewCursoAgregar = new ViewCursoAgregar();
+                carreras = (ArrayList<Carrera>) Client.getClient().ejecutarConexion(new Message("carrera", "functionMult", "queryCarrera", args), 5050).getResponse();
+                modelCarrera.updateTable(carreras);
+                this.viewCursoAgregar = new ViewCursoAgregar(modelCarrera);
+                model.addObserver(viewCursoAgregar);
                 viewCursoAgregar.addListeners(this);
                 viewCursoAgregar.setVisible(true);
                 break;
@@ -55,10 +59,13 @@ public class Cursos implements ActionListener, MouseListener {
         }
     }
 
-    public Cursos(String view, Curso actual) {
+    public Cursos(String view, Curso actual) throws Exception {
         switch (view) {
             case "Edicion":
-                this.viewCursoEditar = new ViewCursoEditar(model, actual);
+                carreras = (ArrayList<Carrera>) Client.getClient().ejecutarConexion(new Message("carrera", "functionMult", "queryCarrera", args), 5050).getResponse();
+                modelCarrera.updateTable(carreras);
+                this.viewCursoEditar = new ViewCursoEditar(model, modelCarrera, actual);
+                this.viewCursoEditar.init();
                 model.addObserver(viewCursoEditar);
                 viewCursoEditar.addListeners(this);
                 viewCursoEditar.setVisible(true);
@@ -89,74 +96,176 @@ public class Cursos implements ActionListener, MouseListener {
         return var;
     }
 
+    public String verificaOpcion() {
+        if ("Código".equals(viewCursoBuscar.ComboBox())) {
+            return "queryCodigo";
+        } else {
+            if ("Nombre".equals(viewCursoBuscar.ComboBox())) {
+                return "queryNombre";
+            } else {
+                return "queryCursoCarrera";
+            }
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         String opcion = e.getActionCommand();
         ArrayList<String> args = new ArrayList();
         String proccess = "function";
-        ArrayList<Curso> carreras;
+        ArrayList<Curso> cursos;
         String result;
-//        Curso carrera;
+
         int caso = verificaAccion(opcion);
+        if ("query".equals(opcion)) {
+            opcion = verificaOpcion();
+        }
+
         if (caso == 0) {
             switch (opcion) {
                 case "queryCodigo": {
-                    args.add(viewCursoBuscar.getCodigo().getText());
+                    args.add(viewCursoBuscar.getBusquedaText().getText());
+                    proccess = "functionMult";
+                }
+                break;
+                case "queryNombre": {
+                    args.add(viewCursoBuscar.getBusquedaText().getText());
+                    proccess = "functionMult";
+                }
+                break;
+                case "queryCursoCarrera": {
+                    args.add(viewCursoBuscar.getBusquedaText().getText());
                     proccess = "functionMult";
                 }
                 break;
                 case "insert": {
                     args.add(viewCursoAgregar.getCodigo().getText());
                     args.add(viewCursoAgregar.getNombre().getText());
-                    args.add(viewCursoAgregar.getTitulo().getText());
+                    args.add(viewCursoAgregar.getCreditos().getText());
+                    args.add(viewCursoAgregar.getHorasText().getText());
+                    args.add(viewCursoAgregar.getAñoText().getText());
+                    args.add(viewCursoAgregar.ComboBox());
+                    args.add(String.valueOf(viewCursoAgregar.getCarrera().getId()));
                     proccess = "procedure";
                 }
                 break;
-
+                case "update": {
+                    viewCursoEditar.actualizar();
+                    args.add(String.valueOf(viewCursoEditar.getCurso().getId()));
+                    args.add(viewCursoEditar.getCurso().getCodigo());
+                    args.add(viewCursoEditar.getCurso().getNombre());
+                    args.add(String.valueOf(viewCursoEditar.getCurso().getCreditos()));
+                    args.add(String.valueOf(viewCursoEditar.getCurso().getHora_semana()));
+                    args.add(String.valueOf(viewCursoEditar.getCurso().getAnno()));
+                    args.add(String.valueOf(viewCursoEditar.getCurso().getCiclo().getId()));
+                    args.add(String.valueOf(viewCursoEditar.getCurso().getCarrera().getId()));
+                    proccess = "procedure";
+                }
+                break;
                 case "delete": {
                     args.add(String.valueOf(viewCursoEditar.getCurso().getId()));
                     proccess = "procedure";
                 }
                 break;
             }
-            if (opcion.equals("queryCodigo")) {
+            if (opcion.equals("queryCodigo") || opcion.equals("queryNombre") || opcion.equals("queryCursoCarrera")) {
                 try {
-                    carreras = (ArrayList<Curso>) Client.getClient().ejecutarConexion(new Message("carrera", proccess, opcion, args), 5050).getResponse();
-                    model.updateTable(carreras);
+                    cursos = (ArrayList<Curso>) Client.getClient().ejecutarConexion(new Message("curso", proccess, opcion, args), 5050).getResponse();
+                    model.updateTable(cursos);
 
                 } catch (Exception ex) {
-                    Logger.getLogger(Cursos.class.getName()).log(Level.SEVERE, null, ex);
+                    avisosFallo(opcion);
                 }
             } else {
                 try {
-                    result = Client.getClient().ejecutarConexion(new Message("carrera", proccess, opcion, args), 5050).getResponse().toString();
-                    result = ((ArrayList<Curso>) Client.getClient()
-                            .ejecutarConexion(new Message("carrera", proccess, opcion, args), 5000)
-                            .getResponse()).stream()
-                            .map((x) -> {
-                                try {
-                                    return x.getJSON().toString();
-                                } catch (Exception ex) {
-                                    throw new RuntimeException(ex.getMessage());
-                                }
-                            })
-                            .collect(Collectors.toList()).toString();
+                    cursos = (ArrayList<Curso>) Client.getClient().ejecutarConexion(new Message("curso", proccess, opcion, args), 5050).getResponse();
+                    actualizar(opcion, cursos);
                 } catch (Exception ex) {
-                    Logger.getLogger(Cursos.class.getName()).log(Level.SEVERE, null, ex);
+                    avisosFallo(opcion);
                 }
             }
         } else {
             switch (opcion) {
                 case "Agregar": {
-                    new Cursos("Agregar");
+                    try {
+                        new Cursos("Agregar");
+                    } catch (Exception ex) {
+                        Logger.getLogger(Cursos.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 break;
                 case "Buscar": {
-                    new Cursos("Buscar");
+                    try {
+                        new Cursos("Buscar");
+                    } catch (Exception ex) {
+                        Logger.getLogger(Cursos.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 break;
             }
         }
+    }
+
+    public void avisosFallo(String opcion) {
+        switch (opcion) {
+            case "insert": {
+                viewCursoAgregar.aviso("Datos incorrectos");
+            }
+            break;
+            case "delete": {
+                viewCursoEditar.aviso("No se puede eliminar");
+            }
+            break;
+            case "update": {
+                viewCursoEditar.aviso("Datos incorrectos");
+            }
+            break;
+            default: {
+                viewCursoBuscar.aviso("Datos no encontrados");
+                viewCursoBuscar.limpiar();
+            }
+            break;
+        }
+    }
+
+    public void actualizar(String opcion, ArrayList<Curso> cursos) {
+        switch (opcion) {
+            case "insert": {
+                viewCursoAgregar.aviso("Datos guardados");
+                Curso c = new Curso();
+                ArrayList<Curso> n = new ArrayList<Curso>();
+                n.add(cursos.get(cursos.size() - 1));
+                viewCursoAgregar.setVisible(false);
+                model.updateTable(n);
+                this.viewListaCursos = new ViewListaCursos(model);
+                model.addObserver(viewListaCursos);
+                viewListaCursos.setVisible(true);
+            }
+            break;
+            case "delete": {
+                viewCursoEditar.aviso("Datos eliminados");
+                viewCursoEditar.setVisible(false);
+            }
+            break;
+            case "update": {
+                Curso c = new Curso();
+                ArrayList<Curso> n = new ArrayList<Curso>();
+                for (int i = 0; i < cursos.size(); i++) {
+                    if (cursos.get(i).getId() == viewCursoEditar.getCurso().getId()) {
+                        c = cursos.get(i);
+                    }
+                }
+                n.add(c);
+                viewCursoEditar.aviso("Datos editados");
+                viewCursoEditar.setVisible(false);
+                model.updateTable(n);
+                this.viewListaCursos = new ViewListaCursos(model);
+                model.addObserver(viewListaCursos);
+                viewListaCursos.setVisible(true);
+            }
+            break;
+        }
+
     }
 
     @Override

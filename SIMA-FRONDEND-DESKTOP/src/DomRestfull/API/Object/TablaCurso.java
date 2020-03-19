@@ -1,7 +1,6 @@
 package DomRestfull.API.Object;
 
 import Logic.Curso;
-import Logic.Curso;
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
 
@@ -24,7 +23,7 @@ public class TablaCurso extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 4;
+        return 8;
     }
 
     @Override
@@ -51,8 +50,12 @@ public class TablaCurso extends AbstractTableModel {
                 value = c.getAnno();
                 break;
             case 6:
-                value = c.getCiclo().getNume();
+                value = c.getCiclo().getId();
                 break;
+            case 7:
+                value = c.getCarrera().getId();
+                break;
+
         }
         return value;
     }
@@ -81,6 +84,9 @@ public class TablaCurso extends AbstractTableModel {
                 break;
             case 6:
                 name = "Ciclo";
+                break;
+            case 7:
+                name = "Carrera Id";
                 break;
 
         }

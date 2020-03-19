@@ -1,17 +1,11 @@
 package DomRestfull.API.Object;
 
 
-
-import Server.Client;
-import Server.Message;
-import Server.Packet;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import views.ViewCarrera.ViewMenu;
@@ -37,8 +31,12 @@ public class Menu implements ActionListener, MouseListener {
             }
             break;
             
-             case "carreras": {
-             
+             case "Cursos": {
+            try {
+                new Cursos("Menu");
+            } catch (Exception ex) {
+                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+            }
             }
             break;
         }

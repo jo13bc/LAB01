@@ -8,11 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import views.ViewCarrera.ViewLogin;
 
 public class Login implements ActionListener, MouseListener {
@@ -34,16 +30,17 @@ public class Login implements ActionListener, MouseListener {
         switch (opcion) {
             case "login": {
                 args.add(viewLogin.getUsuario().getText());
-                args.add(viewLogin.getContraseña().getText());
+                args.add(viewLogin.getContraseña());
                 proccess = "function";
             }
             break;
         }
         try {
             user = (Usuario) ((Packet) Client.getClient().ejecutarConexion(new Message("usuario", proccess, opcion, args), 5050)).getResponse();
-            new Menu();
+            viewLogin.setVisible(false);
+             new Menu();
         } catch (Exception ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+           avisos("Incorrecto");
         }
     }
 
@@ -71,4 +68,18 @@ public class Login implements ActionListener, MouseListener {
     public void mouseExited(MouseEvent arg0) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    
+    public void avisos(String opcion) {
+        switch(opcion){
+            case "Correcto":{
+                
+            }
+            case "Incorrecto":{
+               viewLogin.aviso("Usuario o Contraseña incorrecta");  
+            }
+        }
+                      
+    }
+    
 }
