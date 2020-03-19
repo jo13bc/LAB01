@@ -3,6 +3,7 @@ package Controller;
 import DAO.DAO_Curso;
 import Logic.Curso;
 import Model.Model_Curso;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Controller_Curso extends Controller<Curso> {
@@ -67,5 +68,38 @@ public class Controller_Curso extends Controller<Curso> {
             }
         }
         return list;
+    }
+
+    @Override
+    public ArrayList<Curso> functionMultiple(String opcion, String[] parameters) throws Exception {
+        ArrayList<Curso> object = null;
+        switch (opcion) {
+            case "queryCodigo": {
+                object = dao.queryCodigo(
+                        model.verify_codigo(parameters)
+                );
+            }
+            break;
+            case "queryNombre": {
+                object = dao.queryNombre(
+                        model.verify_nombre(parameters)
+                );
+            }
+            break;
+            case "queryCarrera": {
+                object = dao.queryCarrera();
+            }
+            break;
+            case "queryCursoCarrera": {
+
+                object = dao.queryCarreraCurso(model.verify_id_carrera(parameters)
+                );
+            }
+            break;
+            default: {
+                throw new Exception("Opción desconocida");
+            }
+        }
+        return object;
     }
 }

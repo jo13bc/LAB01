@@ -44,4 +44,25 @@ public class Model_Curso {
         verify_count_of_parameters(parameters, 1);
         return new Curso(verifyInt(parameters[0], "un id", "el id"));
     }
+     public Curso verify_codigo(String[] parameters) throws Exception {
+        verify_count_of_parameters(parameters, 1);
+        Curso nueva = new Curso();
+        nueva.setCodigo(verifyString(parameters[0], "un codigo"));
+        return nueva;
+    }
+
+    public Curso verify_nombre(String[] parameters) throws Exception {
+        verify_count_of_parameters(parameters, 1);
+        Curso nueva = new Curso();
+        nueva.setNombre(verifyString(parameters[0], "un nombre"));
+        return nueva;
+    }
+
+    public Curso verify_id_carrera(String[] parameters) throws Exception {
+        verify_count_of_parameters(parameters, 1);
+        Carrera n = new Carrera(verifyString(parameters[0], "un id"));
+        Curso nueva = new Curso();
+        nueva.setCarrera(n);
+        return nueva;
+    }
 }

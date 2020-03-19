@@ -3,6 +3,7 @@ package Controller;
 import DAO.DAO_Carrera;
 import Logic.Carrera;
 import Model.Model_Carrera;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Controller_Carrera extends Controller<Carrera> {
@@ -68,4 +69,33 @@ public class Controller_Carrera extends Controller<Carrera> {
         }
         return list;
     }
+
+    @Override
+    public ArrayList<Carrera> functionMultiple(String opcion, String[] parameters) throws Exception {
+        ArrayList<Carrera> object = null;
+        switch (opcion) {
+            case "queryCodigo": {
+                object = dao.queryCodigo(
+                        model.verify_codigo(parameters)
+                );
+            }
+            break;
+            case "queryNombre": {
+                System.out.print("FFFFFFFFFFF");
+                object = dao.queryNombre(
+                        model.verify_nombre(parameters)
+                );
+            }
+            break;
+            case "queryCarrera": {
+                object = dao.queryCarrera();
+            }
+            break;
+            default: {
+                throw new Exception("Opción desconocida");
+            }
+        }
+        return object;
+    }
+
 }

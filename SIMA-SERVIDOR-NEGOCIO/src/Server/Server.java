@@ -151,10 +151,9 @@ public class Server {
         }
     }
 
-    public Packet proccess() throws Exception {
-        //
+     public Packet proccess() throws Exception {
+        
         Packet result;
-        //
         switch (message.getType_process()) {
             case "function": {
                 if (!message.getArgs().isEmpty()) {
@@ -186,13 +185,22 @@ public class Server {
                 );
             }
             break;
+            case "functionMult": {        
+                result = new Packet(
+                        controller.functionMultiple(
+                                message.getOpcion(),
+                                message.getArgs().toArray(new String[message.getArgs().size()])
+                        ),
+                        true
+                );
+            }
+            break;
             default: {
                 throw new Exception("Proceso desconocido.");
             }
         }
         return result;
     }
-
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Server primario = new Server(5000);
         Server secundario = new Server(5050);

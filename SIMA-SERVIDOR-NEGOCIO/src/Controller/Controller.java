@@ -2,6 +2,7 @@
 package Controller;
 
 import Logic.Instancia;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Controller<T extends Instancia> {
@@ -11,4 +12,6 @@ public abstract class Controller<T extends Instancia> {
     public abstract T function(String opcion, String[] parameters) throws Exception;
     
     public abstract List<T> function(String opcion) throws Exception;
+    
+    public abstract ArrayList<T> functionMultiple(String opcion, String[] parameters) throws Exception;
 }

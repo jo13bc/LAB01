@@ -3,6 +3,7 @@ package Controller;
 import DAO.DAO_Profesor;
 import Logic.Profesor;
 import Model.Model_Profesor;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Controller_Profesor extends Controller<Profesor>{
@@ -67,5 +68,10 @@ public class Controller_Profesor extends Controller<Profesor>{
             }
         }
         return list;
+    }
+
+    @Override
+    public ArrayList<Profesor> functionMultiple(String opcion, String[] parameters) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -3,6 +3,7 @@ package Controller;
 import DAO.DAO_Usuario;
 import Logic.Usuario;
 import Model.Model_Usuario;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Controller_Usuario extends Controller<Usuario>{
@@ -73,5 +74,10 @@ public class Controller_Usuario extends Controller<Usuario>{
             }
         }
         return list;
+    }
+
+    @Override
+    public ArrayList<Usuario> functionMultiple(String opcion, String[] parameters) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

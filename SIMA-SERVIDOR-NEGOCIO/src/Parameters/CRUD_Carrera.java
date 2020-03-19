@@ -14,21 +14,25 @@ public enum CRUD_Carrera {
     UPDATE("{call  update_carrera(?,?,?,?)}"),
     DELETE("{call  delete_carrera(?)}"),
     LIST("{?=call  list_carrera()}"),
+    QUERYCODIGO("{?=call  query_carrera_codigo(?)}"),
+    QUERYNOMBRE("{?=call  query_carrera_nombre(?)}"),
     QUERY("{?=call  query_carrera(?)}");
 
     private final String value;
 
     /**
      * Método para asignar el valor de cada uno de los parámetros
-     * @param envUrl 
+     *
+     * @param envUrl
      */
     CRUD_Carrera(String envUrl) {
         this.value = envUrl;
     }
-    
+
     /**
      * Método para retornar el valor de cada uno de los parámetros
-     * @return String 
+     *
+     * @return String
      */
     public String getValue() {
         return value;

@@ -36,4 +36,15 @@ public class Model_Carrera {
         verify_count_of_parameters(parameters, 1);
         return new Carrera(verifyInt(parameters[0], "un id", "el id"));
     }
+    public Carrera verify_codigo(String[] parameters) throws Exception {
+        verify_count_of_parameters(parameters, 1);
+        return new Carrera(verifyString(parameters[0], "un codigo"));
+    }
+
+    public Carrera verify_nombre(String[] parameters) throws Exception {
+        verify_count_of_parameters(parameters, 1);
+        Carrera nueva = new Carrera();
+        nueva.setNombre(verifyString(parameters[0], "un codigo"));
+        return nueva;
+    }
 }
