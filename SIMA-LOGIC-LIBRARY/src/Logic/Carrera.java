@@ -24,6 +24,10 @@ public class Carrera extends Instancia {
         this.id = id;
     }
 
+    public Carrera(String codigo) {
+        this.codigo = codigo;
+    }
+
     public int getId() {
         return id;
     }
