@@ -4,7 +4,7 @@
 function crud_carrera_init(event) {
     table_head_init(['Código', 'Nombre', 'Título', 'Acciones']);
     init_table();
-    loadTitle('Mantenimiento de cursos');
+    loadTitle('Mantenimiento de carreras');
     loadButton();
     list();
 }
@@ -144,7 +144,7 @@ function insert() {
     }).then((data) => {
         $('#loader').modal('hide');
         $('#carrera_modal').modal('hide');
-        message('Notificación', 'Se ha guardado la carrera con éxito', parameters_button.CERRAR);
+        message_show('Notificación', 'Se ha guardado la carrera con éxito', parameters_button.CERRAR);
         crud_carrera_load_cursos(data);
     },
             (status) => {
@@ -163,7 +163,7 @@ function update(id) {
     }).then((data) => {
         $('#loader').modal('hide');
         $('#carrera_modal').modal('hide');
-        message('Notificación', 'Se ha guardado la modificación con éxito', parameters_button.CERRAR);
+        message_show('Notificación', 'Se ha guardado la modificación con éxito', parameters_button.CERRAR);
         crud_carrera_load_cursos(data);
     },
             (status) => {
@@ -207,8 +207,8 @@ function list() {
 
 function crud_carrera_load_cursos(data) {
     var fecha = new Date();
-    var table = $('#table_data').DataTable().destroy();
-    table = $('#table_data').DataTable({
+    $('#table_data').DataTable().destroy();
+    $('#table_data').DataTable({
         language: {
             "paginate": {
                 "first": "Primera",
@@ -276,25 +276,17 @@ function crud_carrera_load_cursos(data) {
             }
         ]
     });
-    table_acciones(table);
-    //Funciones filtro
-    nombre_filter(table);
+    table_acciones();
 }
 
-function table_acciones(table) {
+function table_acciones() {
     $('#table_data tbody').on('click', 'button', function () {
         var action = this.className;
-        var data = table.row($(this).parents('tr')).data();
+        var data = $('#table_data').DataTable().row($(this).parents('tr')).data();
         if (action === 'btn update')
             actualizar(data);
         if (action === 'btn delete')
             eliminar(data);
-    });
-}
-
-function nombre_filter(table) {
-    $('#articuloFilter').on('keyup change', function () {
-        table.column(1).search(this.value).draw();
     });
 }
 

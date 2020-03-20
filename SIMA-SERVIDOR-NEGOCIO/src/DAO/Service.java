@@ -17,7 +17,7 @@ public class Service {
 
     protected static void connection() throws SQLException, ClassNotFoundException {
         Class.forName("oracle.jdbc.driver.OracleDriver");
-        connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "LabMatricula", "root");
+        connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "System", "admin");
     }
 
     protected static void disconnect() throws SQLException {

@@ -64,7 +64,7 @@ function carrera_load(id) {
     },
             (status) => {
         $('#loader').modal('hide');
-        error_message('Error', status);
+        error_message_show('Error', status);
     });
 }
 

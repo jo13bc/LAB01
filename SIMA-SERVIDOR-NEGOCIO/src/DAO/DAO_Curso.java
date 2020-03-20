@@ -93,7 +93,7 @@ public class DAO_Curso extends Service {
                             new Carrera(rs.getInt(8))
                     );
                 }
-                if(object.getId() == -1){
+                if (object.getId() == -1) {
                     throw new RuntimeException(Menssage_Error.OBJECT_NOT_FOUND.getValue());
                 }
             } catch (SQLException ex) {
@@ -101,10 +101,16 @@ public class DAO_Curso extends Service {
             }
             return pstmt;
         });
+        object.setCiclo(
+                DAO_Ciclo.getDAO().query(object.getCiclo())
+        );
+        object.setCarrera(DAO_Carrera.getDAO().query(
+                object.getCarrera())
+        );
         return object;
     }
-    
-     public ArrayList<Curso> queryCodigo(Curso codigo) throws GlobalException, NoDataException {
+
+    public ArrayList<Curso> queryCodigo(Curso codigo) throws GlobalException, NoDataException {
         try {
             connection();
         } catch (ClassNotFoundException e) {
@@ -159,7 +165,7 @@ public class DAO_Curso extends Service {
     }
 
     public ArrayList<Curso> queryNombre(Curso nombre) throws GlobalException, NoDataException {
-     
+
         try {
             connection();
         } catch (ClassNotFoundException e) {
@@ -212,8 +218,8 @@ public class DAO_Curso extends Service {
         }
         return detalles;
     }
-    
-      public ArrayList<Curso> queryCarreraCurso(Curso nombre) throws GlobalException, NoDataException {
+
+    public ArrayList<Curso> queryCarreraCurso(Curso nombre) throws GlobalException, NoDataException {
         try {
             connection();
         } catch (ClassNotFoundException e) {
@@ -244,7 +250,7 @@ public class DAO_Curso extends Service {
                 );
                 detalles.add(curso);
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
 
@@ -301,7 +307,6 @@ public class DAO_Curso extends Service {
         return list;
     }
 
-
     public List<Curso> list() {
         List<Curso> list = new ArrayList();
         general_method((CallableStatement pstmt) -> {
@@ -332,6 +337,9 @@ public class DAO_Curso extends Service {
             return pstmt;
         });
         list.forEach((object) -> {
+            object.setCiclo(
+                    DAO_Ciclo.getDAO().query(object.getCiclo())
+            );
             object.setCarrera(
                     DAO_Carrera.getDAO().query(object.getCarrera())
             );
