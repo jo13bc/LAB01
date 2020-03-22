@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 import views.ViewCarrera.ViewLogin;
 
 public class Login implements ActionListener, MouseListener {
