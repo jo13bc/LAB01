@@ -31,6 +31,7 @@ public class Cursos implements ActionListener, MouseListener {
     private ViewCursoEditar viewCursoEditar;
     private ViewListaCursos viewListaCursos;
     private ArrayList<Carrera> carreras;
+    private ArrayList<Curso> cursos;
     ArrayList<String> args = new ArrayList<String>();
 
     public Cursos(String view) throws Exception {
@@ -45,12 +46,16 @@ public class Cursos implements ActionListener, MouseListener {
             case "Agregar":
                 carreras = (ArrayList<Carrera>) Client.getClient().ejecutarConexion(new Message("carrera", "functionMult", "queryCarrera", args), 5050).getResponse();
                 modelCarrera.updateTable(carreras);
-                this.viewCursoAgregar = new ViewCursoAgregar(modelCarrera);
+                cursos = (ArrayList<Curso>) Client.getClient().ejecutarConexion(new Message("curso", "functionMult", "queryCarrera", args), 5050).getResponse();
+                model.updateTable(cursos);
+                this.viewCursoAgregar = new ViewCursoAgregar(modelCarrera, model);
                 model.addObserver(viewCursoAgregar);
                 viewCursoAgregar.addListeners(this);
                 viewCursoAgregar.setVisible(true);
                 break;
             case "Buscar":
+                 cursos = (ArrayList<Curso>) Client.getClient().ejecutarConexion(new Message("curso", "functionMult", "queryCarrera", args), 5050).getResponse();
+                model.updateTable(cursos);                
                 this.viewCursoBuscar = new ViewCursoBuscar(model);
                 model.addObserver(viewCursoBuscar);
                 viewCursoBuscar.addListeners(this);
@@ -64,6 +69,8 @@ public class Cursos implements ActionListener, MouseListener {
             case "Edicion":
                 carreras = (ArrayList<Carrera>) Client.getClient().ejecutarConexion(new Message("carrera", "functionMult", "queryCarrera", args), 5050).getResponse();
                 modelCarrera.updateTable(carreras);
+                cursos = (ArrayList<Curso>) Client.getClient().ejecutarConexion(new Message("curso", "functionMult", "queryCarrera", args), 5050).getResponse();
+                model.updateTable(cursos);                  
                 this.viewCursoEditar = new ViewCursoEditar(model, modelCarrera, actual);
                 this.viewCursoEditar.init();
                 model.addObserver(viewCursoEditar);

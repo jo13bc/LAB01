@@ -4,6 +4,7 @@ package views.ViewCarrera;
 
 import DomRestfull.API.Object.Carreras;
 import DomRestfull.API.Object.Login;
+import DomRestfull.API.Object.Tabla;
 import Logic.Carrera;
 import java.util.Observable;
 import java.util.Observer;
@@ -17,8 +18,11 @@ import static utils.Utils.ajustarPantalla;
 public class ViewCarreraAgregar extends javax.swing.JFrame implements Observer {
     ModeloCarrera model = new ModeloCarrera();
     Carrera carrera = null;
+     private Tabla tabla;
  
-    public ViewCarreraAgregar() {
+    public ViewCarreraAgregar(ModeloCarrera model) {
+        this.model = model;
+        this.tabla = model.getTabla();
         initComponents();
     }
 
@@ -30,6 +34,12 @@ public class ViewCarreraAgregar extends javax.swing.JFrame implements Observer {
     public void aviso(String mensaje){
         JOptionPane.showMessageDialog(this, mensaje);
     }
+    
+     private void updateTable() {
+        this.tabla = model.getTabla();
+        this.jTable2.setModel(tabla);
+    }
+
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -277,6 +287,6 @@ public class ViewCarreraAgregar extends javax.swing.JFrame implements Observer {
     
     @Override
    public void update(Observable o, Object arg) {
-//        updateTable();
+        updateTable();
     }
 }

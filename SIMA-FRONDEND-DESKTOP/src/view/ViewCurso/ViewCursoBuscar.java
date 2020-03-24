@@ -20,10 +20,12 @@ public class ViewCursoBuscar extends javax.swing.JFrame implements Observer {
 
     private ModeloCurso model;
     private TablaCurso tabla;
+    private ArrayList<Curso> listaCurso;
 
     public ViewCursoBuscar(ModeloCurso model) {
         this.model = model;
         this.tabla = model.getTabla();
+        listaCurso = model.getDetalles();
         initComponents();
     }
 
@@ -34,9 +36,8 @@ public class ViewCursoBuscar extends javax.swing.JFrame implements Observer {
 
     public void limpiar() {
         busquedaText.setText(null);
-        ArrayList<Carrera> vacio = new ArrayList<Carrera>();
-        Tabla vacia = new Tabla(vacio);
-        this.jTable1.setModel(vacia);
+        TablaCurso lista = new TablaCurso(listaCurso);
+        this.jTable1.setModel(lista);
     }
 
     @SuppressWarnings("unchecked")
@@ -53,6 +54,7 @@ public class ViewCursoBuscar extends javax.swing.JFrame implements Observer {
         busquedaText = new javax.swing.JTextField();
         queryCodigo = new javax.swing.JButton();
         limpiar = new javax.swing.JButton();
+        Editar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -122,11 +124,6 @@ public class ViewCursoBuscar extends javax.swing.JFrame implements Observer {
 
         jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Código", "Nombre", "ID Carrera" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
 
         busquedaText.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
@@ -147,34 +144,44 @@ public class ViewCursoBuscar extends javax.swing.JFrame implements Observer {
             }
         });
 
+        Editar.setText("Editar");
+        Editar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                EditarMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jpHeaderLayout = new javax.swing.GroupLayout(jpHeader);
         jpHeader.setLayout(jpHeaderLayout);
         jpHeaderLayout.setHorizontalGroup(
             jpHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpHeaderLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 306, Short.MAX_VALUE)
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(busquedaText, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(queryCodigo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(limpiar)
+                .addGap(18, 18, 18)
+                .addComponent(Editar)
                 .addContainerGap())
         );
         jpHeaderLayout.setVerticalGroup(
             jpHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpHeaderLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jpHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jpHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jpHeaderLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(busquedaText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(queryCodigo))
-                    .addComponent(limpiar)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(limpiar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Editar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -215,14 +222,13 @@ public class ViewCursoBuscar extends javax.swing.JFrame implements Observer {
 
     private void limpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_limpiarActionPerformed
         busquedaText.setText(null);
-        ArrayList<Curso> vacio = new ArrayList<Curso>();
-        TablaCurso vacia = new TablaCurso(vacio);
-        this.jTable1.setModel(vacia);
+        TablaCurso lista = new TablaCurso(listaCurso);
+        this.jTable1.setModel(lista);
     }//GEN-LAST:event_limpiarActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    private void EditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EditarMouseClicked
+       aviso("Selecione el curso que necesita editar.");
+    }//GEN-LAST:event_EditarMouseClicked
     public void init() {
         setVisible(true);
     }
@@ -253,6 +259,7 @@ public class ViewCursoBuscar extends javax.swing.JFrame implements Observer {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Editar;
     private javax.swing.JTextField busquedaText;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel3;

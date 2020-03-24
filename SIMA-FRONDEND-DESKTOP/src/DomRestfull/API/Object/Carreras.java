@@ -1,6 +1,5 @@
 package DomRestfull.API.Object;
 
-
 import Logic.Carrera;
 import Logic.Curso;
 import Server.Client;
@@ -10,8 +9,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.ModeloCarrera;
 import modelo.ModeloCurso;
+import view.ViewCurso.ViewListaCursos;
 import views.ViewCarrera.ViewCarreraAgregar;
 import views.ViewCarrera.ViewCarreraBuscar;
 import views.ViewCarrera.ViewCarreraCurso;
@@ -27,11 +29,13 @@ public class Carreras implements ActionListener, MouseListener {
     private ViewCarreraBuscar viewCarreraBuscar;
     private ViewCarreraAgregar viewCarreraAgregar;
     private ViewCarreraEditar viewCarreraEditar;
-    private ViewCarreraCurso viewCarreraCurso;
+    private ViewListaCursos viewListaCursos;
     private ViewListaCarreras viewListaCarreras;
+    ArrayList<String> args = new ArrayList<String>();
     private ArrayList<Curso> cursos;
+    private ArrayList<Carrera> carreras;
 
-    public Carreras(String view) {
+    public Carreras(String view) throws Exception {
         switch (view) {
             case "Menu":
                 this.viewCarreraMenu = new ViewCarreraMenu();
@@ -41,11 +45,16 @@ public class Carreras implements ActionListener, MouseListener {
                 break;
 
             case "Agregar":
-                this.viewCarreraAgregar = new ViewCarreraAgregar();
+                carreras = (ArrayList<Carrera>) Client.getClient().ejecutarConexion(new Message("carrera", "functionMult", "queryCarrera", args), 5050).getResponse();
+                model.updateTable(carreras);
+                this.viewCarreraAgregar = new ViewCarreraAgregar(model);
+                model.addObserver(viewCarreraAgregar);
                 viewCarreraAgregar.addListeners(this);
                 viewCarreraAgregar.setVisible(true);
                 break;
             case "Buscar":
+                carreras = (ArrayList<Carrera>) Client.getClient().ejecutarConexion(new Message("carrera", "functionMult", "queryCarrera", args), 5050).getResponse();
+                model.updateTable(carreras);
                 this.viewCarreraBuscar = new ViewCarreraBuscar(model);
                 model.addObserver(viewCarreraBuscar);
                 viewCarreraBuscar.addListeners(this);
@@ -54,14 +63,20 @@ public class Carreras implements ActionListener, MouseListener {
         }
     }
 
-    public Carreras(String view, Carrera actual) {
+    public Carreras(String view, Carrera actual) throws Exception {
         switch (view) {
             case "Edicion":
-                this.viewCarreraEditar = new ViewCarreraEditar(model, actual);
+                cursos = (ArrayList<Curso>) Client.getClient().ejecutarConexion(new Message("curso", "functionMult", "queryCarrera", args), 5050).getResponse();
+                ArrayList<Curso> cursos_carrera = verificaCarrera(cursos, actual);
+                modelCurso.updateTable(cursos_carrera);
+                carreras = (ArrayList<Carrera>) Client.getClient().ejecutarConexion(new Message("carrera", "functionMult", "queryCarrera", args), 5050).getResponse();
+                model.updateTable(carreras);
+                this.viewCarreraEditar = new ViewCarreraEditar(model, modelCurso, actual);
                 this.viewCarreraEditar.init();
                 model.addObserver(viewCarreraEditar);
                 viewCarreraEditar.addListeners(this);
                 viewCarreraEditar.setVisible(true);
+
                 break;
         }
     }
@@ -102,8 +117,6 @@ public class Carreras implements ActionListener, MouseListener {
         String opcion = e.getActionCommand();
         ArrayList<String> args = new ArrayList();
         String proccess = "function";
-        ArrayList<Carrera> carreras;
-        String result;
 
         int caso = verificaAccion(opcion);
         if ("queryCodigo".equals(opcion)) {
@@ -156,9 +169,9 @@ public class Carreras implements ActionListener, MouseListener {
                     cursos = (ArrayList<Curso>) Client.getClient().ejecutarConexion(new Message("curso", "functionMult", "queryCarrera", args), 5050).getResponse();
                     ArrayList<Curso> cursos_carrera = verificaCarrera(cursos, viewCarreraEditar.getCarrera());
                     modelCurso.updateTable(cursos_carrera);
-                    this.viewCarreraCurso = new ViewCarreraCurso(modelCurso);
-                    model.addObserver(viewCarreraCurso);
-                    viewCarreraCurso.setVisible(true);
+                    this.viewListaCursos = new ViewListaCursos(modelCurso);
+                    model.addObserver(viewListaCursos);
+                    viewListaCursos.setVisible(true);
                 } catch (Exception ex) {
                     avisosFallo(opcion);
                 }
@@ -184,28 +197,35 @@ public class Carreras implements ActionListener, MouseListener {
         } else {
             switch (opcion) {
                 case "Agregar": {
-                    new Carreras("Agregar");
+                    try {
+                        new Carreras("Agregar");
+                    } catch (Exception ex) {
+                        Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 break;
                 case "Buscar": {
-                    new Carreras("Buscar");
+                    try {
+                        new Carreras("Buscar");
+                    } catch (Exception ex) {
+                        Logger.getLogger(Carreras.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 break;
             }
         }
     }
 
-    public void actualizar(String opcion, ArrayList<Carrera> carreras) {
+    public void actualizar(String opcion, ArrayList<Carrera> carreras) throws Exception {
         switch (opcion) {
             case "insert": {
                 viewCarreraAgregar.aviso("Datos guardados");
-
                 ArrayList<Carrera> n = new ArrayList<Carrera>();
                 n.add(carreras.get(carreras.size() - 1));
                 viewCarreraAgregar.setVisible(false);
                 model.updateTable(n);
                 VistaListaCarreras(model);
-                        
+
             }
             break;
             case "delete": {

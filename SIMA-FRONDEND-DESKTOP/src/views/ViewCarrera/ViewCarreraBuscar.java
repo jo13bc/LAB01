@@ -1,13 +1,11 @@
 package views.ViewCarrera;
 
 import DomRestfull.API.Object.Carreras;
-import DomRestfull.API.Object.Login;
 import DomRestfull.API.Object.Tabla;
 import Logic.Carrera;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -18,9 +16,11 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
 
     private ModeloCarrera model;
     private Tabla tabla;
+    private ArrayList<Carrera> listaCarreras;
 
     public ViewCarreraBuscar(ModeloCarrera model) {
         this.model = model;
+        listaCarreras = model.getDetalles();
         this.tabla = model.getTabla();
         initComponents();
     }
@@ -44,6 +44,7 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
         busquedaText = new javax.swing.JTextField();
         query1 = new javax.swing.JButton();
         Limpiar = new javax.swing.JButton();
+        Editar = new javax.swing.JButton();
         jpBody = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -59,11 +60,6 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
 
         jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Código", "Nombre", "ID Carrera" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
-            }
-        });
 
         busquedaText.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
 
@@ -71,16 +67,18 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
         query1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/Imagenes/search.png"))); // NOI18N
         query1.setText("Buscar");
         query1.setActionCommand("queryCodigo");
-        query1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                query1ActionPerformed(evt);
-            }
-        });
 
         Limpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/views/Imagenes/clean.png"))); // NOI18N
         Limpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 LimpiarActionPerformed(evt);
+            }
+        });
+
+        Editar.setText("Editar");
+        Editar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                EditarMouseClicked(evt);
             }
         });
 
@@ -90,28 +88,31 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
             jpHeader5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpHeader5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 207, Short.MAX_VALUE)
-                .addGap(101, 101, 101)
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(busquedaText, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(query1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(Limpiar)
-                .addContainerGap())
+                .addGap(16, 16, 16)
+                .addComponent(Editar)
+                .addGap(20, 20, 20))
         );
         jpHeader5Layout.setVerticalGroup(
             jpHeader5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpHeader5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jpHeader5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(Limpiar)
+                .addGroup(jpHeader5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jLabel8)
                     .addGroup(jpHeader5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(query1)
                         .addComponent(busquedaText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(Limpiar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Editar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -150,7 +151,7 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
                 .addContainerGap())
@@ -167,7 +168,7 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
         );
         jpBodyLayout.setVerticalGroup(
             jpBodyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jpBodyLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jpBodyLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -193,14 +194,9 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
 
     private void LimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LimpiarActionPerformed
         busquedaText.setText(null);
-        ArrayList<Carrera> vacio = new ArrayList<Carrera>();
-        Tabla vacia = new Tabla(vacio);
-        this.jTable1.setModel(vacia);
+        Tabla lista = new Tabla(listaCarreras);
+        this.jTable1.setModel(lista);
     }//GEN-LAST:event_LimpiarActionPerformed
-
-    private void query1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_query1ActionPerformed
-
-    }//GEN-LAST:event_query1ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         try {
@@ -211,22 +207,19 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
 
             }
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage(), "El Laberinto ya fue eliminado", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), "El Laberinto", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    private void EditarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_EditarMouseClicked
+        aviso("Selecione la carrera que necesita editar.");
+    }//GEN-LAST:event_EditarMouseClicked
     public void init() {
         setVisible(true);
     }
 
     public void limpiar() {
         busquedaText.setText(null);
-        ArrayList<Carrera> vacio = new ArrayList<Carrera>();
-        Tabla vacia = new Tabla(vacio);
-        this.jTable1.setModel(vacia);
     }
 
     private void updateTable() {
@@ -251,8 +244,15 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
         return busquedaText;
     }
 
-
+    public void eliminarCarrera(int id) {
+        for (int i = 0; i < listaCarreras.size(); i++) {
+            if (listaCarreras.get(i).getId() == id) {
+                listaCarreras.remove(listaCarreras.get(i));
+            }
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Editar;
     private javax.swing.JButton Limpiar;
     private javax.swing.JTextField busquedaText;
     private javax.swing.JComboBox<String> jComboBox1;
@@ -265,8 +265,12 @@ public class ViewCarreraBuscar extends javax.swing.JFrame implements Observer {
     private javax.swing.JButton query1;
     // End of variables declaration//GEN-END:variables
 
+    public void update() {
+        updateTable();
+    }
+
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(Observable arg0, Object arg1) {
         updateTable();
     }
 }
