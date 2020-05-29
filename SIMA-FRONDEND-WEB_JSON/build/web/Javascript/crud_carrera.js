@@ -7,6 +7,7 @@ function crud_carrera_init(event) {
     loadTitle('Mantenimiento de carreras');
     loadButton();
     list();
+    setInterval(serch_change, 2000);
 }
 
 function table_head_init(parameters) {
@@ -295,6 +296,19 @@ function table_acciones() {
 function crud_carrera_confirmation_show() {
     $('#curso_modal').modal('hide');
     confirmation_show();
+}
+
+function serch_change() {
+    ajax({
+        type: "GET",
+        url: "synchronizer"
+    }).then((data) => {
+        if (data)
+            list();
+    },
+            (status) => {
+        error_message_show('Error', status);
+    });
 }
 
 document.addEventListener("DOMContentLoaded", crud_carrera_init);

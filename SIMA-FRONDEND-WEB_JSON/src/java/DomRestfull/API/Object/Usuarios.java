@@ -54,6 +54,7 @@ public class Usuarios extends HttpServlet {
             case "delete": {
                 object = gson.fromJson(request.getParameter("json"), Usuario.class);
                 proccess = "procedure";
+                Synchronizer.getSynchronizer().setChange(true);
             }
             break;
             case "query": {

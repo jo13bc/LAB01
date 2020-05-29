@@ -53,6 +53,7 @@ public class Carreras extends HttpServlet {
             case "delete": {
                 object = gson.fromJson(request.getParameter("json"), Carrera.class);
                 proccess = "procedure";
+                Synchronizer.getSynchronizer().setChange(true);
             }
             break;
             case "query": {

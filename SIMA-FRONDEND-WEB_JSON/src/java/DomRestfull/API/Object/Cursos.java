@@ -51,9 +51,9 @@ public class Cursos extends HttpServlet {
             case "insert":
             case "update":
             case "delete": {
-                String var = request.getParameter("json");
-                object = gson.fromJson(var, Curso.class);
+                object = gson.fromJson(request.getParameter("json"), Curso.class);
                 proccess = "procedure";
+                Synchronizer.getSynchronizer().setChange(true);
             }
             break;
             case "query": {
